@@ -4,18 +4,30 @@
 import * as React from 'react'
 
 function useLocalStorage(key, defaultValue = ''){
-  const getInitialValue = () => window.localStorage.getItem(key) || defaultValue;
+  const getInitialValue = () => {
+    const localValue = window.localStorage.getItem(key);
+    if(localValue){
+      return JSON.parse(localValue)
+    }
+    return defaultValue;
+  }
+
   const [state, setState] = React.useState(getInitialValue);
+  const prevKey = React.useRef(key);
 
   React.useEffect(() => {
-    window.localStorage.setItem(key, state);
+    if(prevKey.current !== key){
+      window.localStorage.removeItem(prevKey.current)
+      prevKey.current = key;
+    }
+    window.localStorage.setItem(key, JSON.stringify(state));
   }, [key, state]);
 
   return [state, setState];
 }
 
 function Greeting({initialName = ''}) {
-  const [name, setName] = useLocalStorage('persona', initialName);
+  const [name, setName] = useLocalStorage('name', initialName);
 
   function handleChange(event) {
     setName(event.target.value)
