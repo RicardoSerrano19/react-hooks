@@ -13,38 +13,38 @@ const request_status = {
 
 function PokemonInfo({pokemonName}) {
   const [error, setError] = React.useState('')
-  const [status, setStatus] = React.useState({status: request_status.IDLE, pokemon: null});
+  const [state, setState] = React.useState({status: request_status.IDLE, pokemon: null});
 
   React.useEffect(() =>{
     if(!pokemonName) return
 
-    const updatedStatus = {status: request_status.PENDING};
-    setStatus(prev => ({...prev, ...updatedStatus}))
+    const updateState = {status: request_status.PENDING};
+    setState(prev => ({...prev, ...updateState}))
 
     fetchPokemon(pokemonName).then(
       pokemonData => {
-        const updatedStatus = {status: request_status.RESOLVED, pokemon: pokemonData};
-        setStatus({...updatedStatus})
+        const updateState = {status: request_status.RESOLVED, pokemon: pokemonData};
+        setState({...updateState})
       },
       error =>{
         const {message} = error;
-        const updatedStatus = {status: request_status.REJECTED, pokemon: null};
-        setStatus({...updatedStatus})
+        const updateState = {status: request_status.REJECTED, pokemon: null};
+        setState({...updateState})
         setError(message);
       }
     )
   }, [pokemonName]);
 
-  if(status.status === request_status.IDLE){
+  if(state.status === request_status.IDLE){
     return 'Submit a pokemon'
   }
-  if(status.status === request_status.PENDING){
+  if(state.status === request_status.PENDING){
     return ( <PokemonInfoFallback name={pokemonName}/> )
   }
-  if(status.status === request_status.RESOLVED){
-    return ( <PokemonDataView pokemon={status.pokemon} /> )
+  if(state.status === request_status.RESOLVED){
+    return ( <PokemonDataView pokemon={state.pokemon} /> )
   }
-  if(status.status === request_status.REJECTED){
+  if(state.status === request_status.REJECTED){
     return (
       <div role="alert">
         There was an error: <pre style={{whiteSpace: 'normal'}}>{error}</pre>
