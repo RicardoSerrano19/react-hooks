@@ -11,7 +11,7 @@ function PokemonInfo({pokemonName}) {
   React.useEffect(() =>{
     if(!pokemonName) return
     setPokemon(null);
-    setPokemon('...loading');
+    setError(null);
 
     fetchPokemon(pokemonName).then(
       pokemonData => {
@@ -24,8 +24,13 @@ function PokemonInfo({pokemonName}) {
     )
   }, [pokemonName]);
 
+  if(error) return (
+    <div role="alert">
+      There was an error: <pre style={{whiteSpace: 'normal'}}>{error}</pre>
+    </div>
+  )
   if(!pokemonName) return 'Submit a pokemon'
-  if(pokemonName && !pokemon) return ( <PokemonInfoFallback name={pokemonName} message={error}/> )
+  if(pokemonName && !pokemon) return ( <PokemonInfoFallback name={pokemonName}/> )
   if(pokemon) return ( <PokemonDataView pokemon={pokemon} /> )
 }
 

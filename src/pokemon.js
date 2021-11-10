@@ -59,7 +59,7 @@ function fetchPokemon(name, delay = 1500) {
     })
 }
 
-function PokemonInfoFallback({name, message}) {
+function PokemonInfoFallback({name}) {
   const initialName = React.useRef(name).current
   const fallbackPokemonData = {
     name: initialName,
@@ -71,7 +71,7 @@ function PokemonInfoFallback({name, message}) {
         {name: 'Loading Attack 2', type: 'Type', damage: 'XX'},
       ],
     },
-    fetchedAt: message,
+    fetchedAt: '...loading',
   }
   return <PokemonDataView pokemon={fallbackPokemonData} />
 }
