@@ -12,9 +12,8 @@ const request_status = {
 }
 
 function PokemonInfo({pokemonName}) {
-  const [error, setError] = React.useState('')
-  const [state, setState] = React.useState({status: request_status.IDLE, pokemon: null});
-
+  const [state, setState] = React.useState({status: request_status.IDLE, pokemon: null, error: ''});
+  console.log(state)
   React.useEffect(() =>{
     if(!pokemonName) return
 
@@ -23,14 +22,13 @@ function PokemonInfo({pokemonName}) {
 
     fetchPokemon(pokemonName).then(
       pokemonData => {
-        const updateState = {status: request_status.RESOLVED, pokemon: pokemonData};
+        const updateState = {status: request_status.RESOLVED, pokemon: pokemonData, error: ''};
         setState({...updateState})
       },
       error =>{
         const {message} = error;
-        const updateState = {status: request_status.REJECTED, pokemon: null};
+        const updateState = {status: request_status.REJECTED, pokemon: null, error: message};
         setState({...updateState})
-        setError(message);
       }
     )
   }, [pokemonName]);
@@ -47,7 +45,7 @@ function PokemonInfo({pokemonName}) {
   if(state.status === request_status.REJECTED){
     return (
       <div role="alert">
-        There was an error: <pre style={{whiteSpace: 'normal'}}>{error}</pre>
+        There was an error: <pre style={{whiteSpace: 'normal'}}>{state.error}</pre>
       </div>
     )
   }
