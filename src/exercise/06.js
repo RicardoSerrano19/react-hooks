@@ -61,7 +61,7 @@ function App() {
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
       <hr />
       <div className="pokemon-info">
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <ErrorBoundary onReset={() => {setPokemonName('')}} FallbackComponent={ErrorFallback}>
           <PokemonInfo pokemonName={pokemonName} />
         </ErrorBoundary>
       </div>
@@ -69,10 +69,11 @@ function App() {
   )
 }
 
-function ErrorFallback({error}){
+function ErrorFallback({error, resetErrorBoundary}){
   return(
     <div role="alert">
       There was an error: <pre style={{whiteSpace: 'normal'}}>{error}.</pre>
+      <button onClick={resetErrorBoundary}>Try again</button>
     </div>
   )    
 }
