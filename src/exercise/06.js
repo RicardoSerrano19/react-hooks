@@ -60,7 +60,7 @@ function App() {
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
       <hr />
       <div className="pokemon-info">
-        <ErrorBoundary>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <PokemonInfo pokemonName={pokemonName} />
         </ErrorBoundary>
       </div>
@@ -80,13 +80,17 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {   
-      return (
-        <div role="alert">
-          There was an error: <pre style={{whiteSpace: 'normal'}}>{this.state.error}</pre>
-        </div>
-      )    
+      return <this.props.FallbackComponent error={this.state.error} />
     }
     return this.props.children; 
   }
+}
+
+function ErrorFallback({error}){
+  return(
+    <div role="alert">
+      There was an error: <pre style={{whiteSpace: 'normal'}}>{error}.</pre>
+    </div>
+  )    
 }
 export default App
