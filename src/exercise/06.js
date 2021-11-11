@@ -43,11 +43,7 @@ function PokemonInfo({pokemonName}) {
     return ( <PokemonDataView pokemon={state.pokemon} /> )
   }
   if(state.status === request_status.REJECTED){
-    return (
-      <div role="alert">
-        There was an error: <pre style={{whiteSpace: 'normal'}}>{state.error}</pre>
-      </div>
-    )
+       throw state.error;
   }
 
 }
@@ -64,10 +60,33 @@ function App() {
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
       <hr />
       <div className="pokemon-info">
-        <PokemonInfo pokemonName={pokemonName} />
+        <ErrorBoundary>
+          <PokemonInfo pokemonName={pokemonName} />
+        </ErrorBoundary>
       </div>
     </div>
   )
 }
 
+class ErrorBoundary extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {hasError: false, error: null}
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error: error };  
+  }
+
+  render() {
+    if (this.state.hasError) {   
+      return (
+        <div role="alert">
+          There was an error: <pre style={{whiteSpace: 'normal'}}>{this.state.error}</pre>
+        </div>
+      )    
+    }
+    return this.props.children; 
+  }
+}
 export default App
